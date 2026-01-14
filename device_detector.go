@@ -6,8 +6,8 @@ import (
 	"strings"
 
 	"github.com/gijsbers/go-pcre"
-	"github.com/robicode/device-detector/util"
-	"github.com/robicode/device-detector/versionextractor"
+	"github.com/shubhamc-ins/device-detector/util"
+	"github.com/shubhamc-ins/device-detector/versionextractor"
 	"github.com/robicode/version"
 )
 

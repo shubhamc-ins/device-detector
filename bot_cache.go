@@ -4,7 +4,7 @@ import (
 	"log"
 
 	"github.com/gijsbers/go-pcre"
-	"github.com/robicode/device-detector/util"
+	"github.com/shubhamc-ins/device-detector/util"
 )
 
 type BotCache interface {

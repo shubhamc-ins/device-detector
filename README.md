@@ -21,13 +21,13 @@ I am also aware of the timing ramifications of using a replacement parser (Go pr
 ## Installation
 
 ```bash
-go get github.com/robicode/device-detector
+go get github.com/shubhamc-ins/device-detector
 ```
 
 ```go
 import (
   ...
-  "github.com/robicode/device-detector"
+  "github.com/shubhamc-ins/device-detector"
 )
 ```
 

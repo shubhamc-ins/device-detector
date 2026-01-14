@@ -5,7 +5,7 @@ import (
 	"regexp"
 	"strings"
 
-	"github.com/robicode/device-detector/extractor"
+	"github.com/shubhamc-ins/device-detector/extractor"
 )
 
 type Device struct {

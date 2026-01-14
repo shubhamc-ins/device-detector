@@ -3,7 +3,7 @@ package devicedetector
 import (
 	"strings"
 
-	"github.com/robicode/device-detector/util"
+	"github.com/shubhamc-ins/device-detector/util"
 )
 
 var availableBrowsers = map[string]string{

@@ -1,4 +1,4 @@
-module github.com/robicode/device-detector
+module github.com/shubhamc-ins/device-detector
 
 go 1.20
 

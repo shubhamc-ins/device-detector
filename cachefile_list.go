@@ -5,7 +5,7 @@ import (
 	"path/filepath"
 	"strings"
 
-	"github.com/robicode/device-detector/util"
+	"github.com/shubhamc-ins/device-detector/util"
 )
 
 // CacheFileList is a helper struct used to pass a list of caches to search into
