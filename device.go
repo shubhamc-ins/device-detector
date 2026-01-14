@@ -5,7 +5,7 @@ import (
 	"regexp"
 	"strings"
 
-	"github.com/shubhamc-ins/device-detector/extractor"
+	"github.com/Insticator/device-detector-go/extractor"
 )
 
 type Device struct {

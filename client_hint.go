@@ -6,7 +6,7 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/shubhamc-ins/device-detector/util"
+	"github.com/Insticator/device-detector-go/util"
 )
 
 type ClientHint struct {

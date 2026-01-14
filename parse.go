@@ -3,7 +3,7 @@ package devicedetector
 import (
 	"log"
 
-	"github.com/shubhamc-ins/device-detector/util"
+	"github.com/Insticator/device-detector-go/util"
 	"gopkg.in/yaml.v3"
 )
 

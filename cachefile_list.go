@@ -5,7 +5,7 @@ import (
 	"path/filepath"
 	"strings"
 
-	"github.com/shubhamc-ins/device-detector/util"
+	"github.com/Insticator/device-detector-go/util"
 )
 
 // CacheFileList is a helper struct used to pass a list of caches to search into

@@ -4,7 +4,7 @@ import (
 	"log"
 
 	"github.com/gijsbers/go-pcre"
-	"github.com/shubhamc-ins/device-detector/util"
+	"github.com/Insticator/device-detector-go/util"
 )
 
 type ClientCache interface {

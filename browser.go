@@ -3,7 +3,7 @@ package devicedetector
 import (
 	"strings"
 
-	"github.com/shubhamc-ins/device-detector/util"
+	"github.com/Insticator/device-detector-go/util"
 )
 
 var availableBrowsers = map[string]string{

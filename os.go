@@ -3,9 +3,9 @@ package devicedetector
 import (
 	"strings"
 
-	"github.com/shubhamc-ins/device-detector/extractor"
-	"github.com/shubhamc-ins/device-detector/util"
-	"github.com/shubhamc-ins/device-detector/versionextractor"
+	"github.com/Insticator/device-detector-go/extractor"
+	"github.com/Insticator/device-detector-go/util"
+	"github.com/Insticator/device-detector-go/versionextractor"
 )
 
 type OS struct {

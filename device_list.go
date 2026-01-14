@@ -2,7 +2,7 @@ package devicedetector
 
 import (
 	"github.com/gijsbers/go-pcre"
-	"github.com/shubhamc-ins/device-detector/util"
+	"github.com/Insticator/device-detector-go/util"
 )
 
 // A DeviceList holds a list of devices loaded from YAML files.

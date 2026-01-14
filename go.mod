@@ -1,4 +1,4 @@
-module github.com/shubhamc-ins/device-detector
+module github.com/Insticator/device-detector-go
 
 go 1.20
 
