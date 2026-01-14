@@ -3,9 +3,9 @@ package devicedetector
 import (
 	"strings"
 
-	"github.com/robicode/device-detector/extractor"
-	"github.com/robicode/device-detector/util"
-	"github.com/robicode/device-detector/versionextractor"
+	"github.com/shubhamc-ins/device-detector/extractor"
+	"github.com/shubhamc-ins/device-detector/util"
+	"github.com/shubhamc-ins/device-detector/versionextractor"
 )
 
 type OS struct {

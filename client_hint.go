@@ -6,7 +6,7 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/robicode/device-detector/util"
+	"github.com/shubhamc-ins/device-detector/util"
 )
 
 type ClientHint struct {
