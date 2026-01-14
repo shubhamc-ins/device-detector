@@ -1,141 +1,146 @@
-name: Sync Matomo Upstream
+# name: Sync Matomo Upstream
 
-on:
-  # Run weekly on Monday at 9am UTC
-  schedule:
-    - cron: '0 9 * * 1'
-  # Allow manual trigger
-  workflow_dispatch:
+# on:
+#   # Run weekly on Monday at 9am UTC
+#   schedule:
+#     - cron: '0 9 * * 1'
+#   # Allow manual trigger
+#   workflow_dispatch:
 
-jobs:
-  sync:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-          token: ${{ secrets.GITHUB_TOKEN }}
+# jobs:
+#   sync:
+#     runs-on: ubuntu-latest
+#     steps:
+#       - name: Checkout repository
+#         uses: actions/checkout@v4
+#         with:
+#           fetch-depth: 0
+#           token: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Setup Go
-        uses: actions/setup-go@v5
-        with:
-          go-version: '1.21'
+#       - name: Setup Go
+#         uses: actions/setup-go@v5
+#         with:
+#           go-version: '1.21'
 
-      - name: Clone Matomo device-detector
-        run: |
-          git clone --depth 1 https://github.com/matomo-org/device-detector.git /tmp/matomo-dd
-          UPSTREAM_COMMIT=$(cd /tmp/matomo-dd && git rev-parse HEAD)
-          UPSTREAM_DATE=$(cd /tmp/matomo-dd && git log -1 --format="%ci" HEAD)
-          UPSTREAM_MSG=$(cd /tmp/matomo-dd && git log -1 --format="%s" HEAD)
-          echo "UPSTREAM_COMMIT=$UPSTREAM_COMMIT" >> $GITHUB_ENV
-          echo "UPSTREAM_DATE=$UPSTREAM_DATE" >> $GITHUB_ENV
-          echo "UPSTREAM_MSG=$UPSTREAM_MSG" >> $GITHUB_ENV
+#       - name: Install PCRE library
+#         run: |
+#           sudo apt-get update
+#           sudo apt-get install -y libpcre3-dev
 
-      - name: Check if update needed
-        id: check
-        run: |
-          if grep -q "${{ env.UPSTREAM_COMMIT }}" UPSTREAM_SYNC.md 2>/dev/null; then
-            echo "Already up to date with upstream"
-            echo "needs_update=false" >> $GITHUB_OUTPUT
-          else
-            echo "Update available"
-            echo "needs_update=true" >> $GITHUB_OUTPUT
-          fi
+#       - name: Clone Matomo device-detector
+#         run: |
+#           git clone --depth 1 https://github.com/matomo-org/device-detector.git /tmp/matomo-dd
+#           UPSTREAM_COMMIT=$(cd /tmp/matomo-dd && git rev-parse HEAD)
+#           UPSTREAM_DATE=$(cd /tmp/matomo-dd && git log -1 --format="%ci" HEAD)
+#           UPSTREAM_MSG=$(cd /tmp/matomo-dd && git log -1 --format="%s" HEAD)
+#           echo "UPSTREAM_COMMIT=$UPSTREAM_COMMIT" >> $GITHUB_ENV
+#           echo "UPSTREAM_DATE=$UPSTREAM_DATE" >> $GITHUB_ENV
+#           echo "UPSTREAM_MSG=$UPSTREAM_MSG" >> $GITHUB_ENV
 
-      - name: Sync regexes and fixtures
-        if: steps.check.outputs.needs_update == 'true'
-        run: |
-          # Sync regexes
-          rm -rf regexes
-          cp -r /tmp/matomo-dd/regexes .
+#       - name: Check if update needed
+#         id: check
+#         run: |
+#           if grep -q "${{ env.UPSTREAM_COMMIT }}" UPSTREAM_SYNC.md 2>/dev/null; then
+#             echo "Already up to date with upstream"
+#             echo "needs_update=false" >> $GITHUB_OUTPUT
+#           else
+#             echo "Update available"
+#             echo "needs_update=true" >> $GITHUB_OUTPUT
+#           fi
 
-          # Sync fixtures
-          rm -rf fixtures
-          mkdir -p fixtures
-          cp -r /tmp/matomo-dd/Tests/fixtures/*.yml fixtures/
+#       - name: Sync regexes and fixtures
+#         if: steps.check.outputs.needs_update == 'true'
+#         run: |
+#           # Sync regexes
+#           rm -rf regexes
+#           cp -r /tmp/matomo-dd/regexes .
 
-          # Count files
-          REGEX_COUNT=$(find regexes -name "*.yml" | wc -l | tr -d ' ')
-          FIXTURE_COUNT=$(find fixtures -name "*.yml" | wc -l | tr -d ' ')
+#           # Sync fixtures
+#           rm -rf fixtures
+#           mkdir -p fixtures
+#           cp -r /tmp/matomo-dd/Tests/fixtures/*.yml fixtures/
 
-          # Update sync info
-          cat > UPSTREAM_SYNC.md << EOF
-          # Upstream Sync Information
+#           # Count files
+#           REGEX_COUNT=$(find regexes -name "*.yml" | wc -l | tr -d ' ')
+#           FIXTURE_COUNT=$(find fixtures -name "*.yml" | wc -l | tr -d ' ')
 
-          This project syncs regexes and fixtures from the [Matomo device-detector](https://github.com/matomo-org/device-detector) PHP library.
+#           # Update sync info
+#           cat > UPSTREAM_SYNC.md << EOF
+#           # Upstream Sync Information
 
-          ## Last Sync
+#           This project syncs regexes and fixtures from the [Matomo device-detector](https://github.com/matomo-org/device-detector) PHP library.
 
-          - **Commit:** ${{ env.UPSTREAM_COMMIT }}
-          - **Date:** ${{ env.UPSTREAM_DATE }}
-          - **Message:** ${{ env.UPSTREAM_MSG }}
-          - **Synced on:** $(date -u +"%Y-%m-%d %H:%M:%S UTC")
+#           ## Last Sync
 
-          ## What's Synced
+#           - **Commit:** ${{ env.UPSTREAM_COMMIT }}
+#           - **Date:** ${{ env.UPSTREAM_DATE }}
+#           - **Message:** ${{ env.UPSTREAM_MSG }}
+#           - **Synced on:** $(date -u +"%Y-%m-%d %H:%M:%S UTC")
 
-          - \`regexes/\` - All regex YAML files (${REGEX_COUNT} files)
-          - \`fixtures/\` - Test fixtures from \`Tests/fixtures/\` (${FIXTURE_COUNT} files)
+#           ## What's Synced
 
-          ## How to Sync
+#           - \`regexes/\` - All regex YAML files (${REGEX_COUNT} files)
+#           - \`fixtures/\` - Test fixtures from \`Tests/fixtures/\` (${FIXTURE_COUNT} files)
 
-          \`\`\`bash
-          # Manual sync
-          ./scripts/sync-upstream.sh
+#           ## How to Sync
 
-          # Sync to specific commit
-          ./scripts/sync-upstream.sh <commit-hash>
-          \`\`\`
-          EOF
+#           \`\`\`bash
+#           # Manual sync
+#           ./scripts/sync-upstream.sh
 
-      - name: Run all tests
-        if: steps.check.outputs.needs_update == 'true'
-        run: |
-          echo "=== Running all tests ==="
-          go test ./... -v
+#           # Sync to specific commit
+#           ./scripts/sync-upstream.sh <commit-hash>
+#           \`\`\`
+#           EOF
 
-      - name: Run regex validation tests
-        if: steps.check.outputs.needs_update == 'true'
-        run: |
-          echo "=== Running regex validation tests ==="
-          go test -v -run "TestRegexesLoad|TestCriticalUserAgents|TestNewDevicePatterns|TestNoPanicsOnMalformedUA"
+#       - name: Run all tests
+#         if: steps.check.outputs.needs_update == 'true'
+#         run: |
+#           echo "=== Running all tests ==="
+#           go test ./... -v
 
-          echo ""
-          echo "=== Validation Summary ==="
-          echo "✓ Regexes loaded successfully"
-          echo "✓ Critical user agents detected correctly"
-          echo "✓ New device patterns (2024-2025) working"
-          echo "✓ No panics on malformed input"
+#       - name: Run regex validation tests
+#         if: steps.check.outputs.needs_update == 'true'
+#         run: |
+#           echo "=== Running regex validation tests ==="
+#           go test -v -run "TestRegexesLoad|TestCriticalUserAgents|TestNewDevicePatterns|TestNoPanicsOnMalformedUA"
 
-      - name: Create Pull Request
-        if: steps.check.outputs.needs_update == 'true'
-        uses: peter-evans/create-pull-request@v6
-        with:
-          token: ${{ secrets.GITHUB_TOKEN }}
-          commit-message: "chore: sync with Matomo upstream (${{ env.UPSTREAM_COMMIT }})"
-          title: "chore: Sync regexes with Matomo upstream"
-          body: |
-            ## Automated Upstream Sync
+#           echo ""
+#           echo "=== Validation Summary ==="
+#           echo "✓ Regexes loaded successfully"
+#           echo "✓ Critical user agents detected correctly"
+#           echo "✓ New device patterns (2024-2025) working"
+#           echo "✓ No panics on malformed input"
 
-            This PR syncs regexes and fixtures with the latest Matomo device-detector.
+#       - name: Create Pull Request
+#         if: steps.check.outputs.needs_update == 'true'
+#         uses: peter-evans/create-pull-request@v6
+#         with:
+#           token: ${{ secrets.GITHUB_TOKEN }}
+#           commit-message: "chore: sync with Matomo upstream (${{ env.UPSTREAM_COMMIT }})"
+#           title: "chore: Sync regexes with Matomo upstream"
+#           body: |
+#             ## Automated Upstream Sync
 
-            **Upstream Commit:** `${{ env.UPSTREAM_COMMIT }}`
-            **Upstream Date:** ${{ env.UPSTREAM_DATE }}
-            **Upstream Message:** ${{ env.UPSTREAM_MSG }}
+#             This PR syncs regexes and fixtures with the latest Matomo device-detector.
 
-            ### Changes
-            - Updated `regexes/` directory
-            - Updated `fixtures/` directory
-            - Updated `UPSTREAM_SYNC.md`
+#             **Upstream Commit:** `${{ env.UPSTREAM_COMMIT }}`
+#             **Upstream Date:** ${{ env.UPSTREAM_DATE }}
+#             **Upstream Message:** ${{ env.UPSTREAM_MSG }}
 
-            ### Testing
-            - [ ] All Go tests pass
-            - [ ] Manual verification with sample user agents
+#             ### Changes
+#             - Updated `regexes/` directory
+#             - Updated `fixtures/` directory
+#             - Updated `UPSTREAM_SYNC.md`
 
-            ---
-            *Automated by GitHub Actions*
-          branch: chore/sync-upstream-${{ env.UPSTREAM_COMMIT }}
-          delete-branch: true
-          labels: |
-            automated
-            dependencies
+#             ### Testing
+#             - [ ] All Go tests pass
+#             - [ ] Manual verification with sample user agents
+
+#             ---
+#             *Automated by GitHub Actions*
+#           branch: chore/sync-upstream-${{ env.UPSTREAM_COMMIT }}
+#           delete-branch: true
+#           labels: |
+#             automated
+#             dependencies
